@@ -100,7 +100,6 @@ const generateDocxContent = (data: ResumeData) => {
     ];
   }
 
-  // Шаблон не найден
   return [
     new Paragraph({
       children: [new TextRun({ text: 'Шаблон не выбран или недоступен.', bold: true, color: 'FF0000' })],
@@ -115,6 +114,7 @@ const generateHTML = (data: ResumeData) => {
     return `
       <div style="font-family: Arial, sans-serif; padding: 40px; width: 595px; background: white; color: #000;">
         <h1 style="margin-bottom: 10px;">${fullName}</h1>
+        ${data.photo ? `<img src="${data.photo}" alt="Фото" style="width:100px; margin-bottom: 10px;" />` : ''}
         <p><b>Город:</b> ${data.city}</p>
         <hr />
         <p><b>Контакты:</b><br>${data.contacts.replace(/\n/g, '<br>')}</p>
@@ -129,6 +129,7 @@ const generateHTML = (data: ResumeData) => {
       <div style="font-family: 'Georgia', serif; background: #f9f9f9; padding: 40px; width: 595px; color: #333;">
         <div style="border-bottom: 2px solid #ccc; margin-bottom: 20px;">
           <h2 style="margin: 0; color: navy;">${fullName}</h2>
+          ${data.photo ? `<img src="${data.photo}" alt="Фото" style="width:100px; margin: 10px 0;" />` : ''}
           <p style="margin: 0 0 10px;"><i>${data.city}</i></p>
         </div>
         <section style="margin-bottom: 20px;">

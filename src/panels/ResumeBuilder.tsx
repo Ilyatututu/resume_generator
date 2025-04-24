@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, ChangeEvent } from 'react';
 import {
   Panel, PanelHeader, Group, Header, FormItem, Input, Textarea,
   Button, Div, Select
@@ -21,6 +21,7 @@ export const ResumeBuilder: FC<ResumeBuilderProps> = ({ id, fetchedUser }) => {
   const [experience, setExperience] = useState('');
   const [template, setTemplate] = useState('template1');
   const [format, setFormat] = useState('pdf');
+  const [photo, setPhoto] = useState('');
 
   useEffect(() => {
     if (fetchedUser) {
@@ -30,13 +31,24 @@ export const ResumeBuilder: FC<ResumeBuilderProps> = ({ id, fetchedUser }) => {
     }
   }, [fetchedUser]);
 
+  const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPhoto(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleExport = () => {
     generateDocument({
       firstName,
       lastName,
       middleName,
       city,
-      photo: fetchedUser?.photo_200 || '',
+      photo,
       contacts,
       education,
       experience,
@@ -60,6 +72,10 @@ export const ResumeBuilder: FC<ResumeBuilderProps> = ({ id, fetchedUser }) => {
         </FormItem>
         <FormItem top="Город">
           <Input value={city} onChange={e => setCity(e.target.value)} />
+        </FormItem>
+        <FormItem top="Фото">
+          <Input type="file" accept="image/*" onChange={handlePhotoChange} />
+          {photo && <img src={photo} alt="Превью" style={{ marginTop: 10, width: 100 }} />}
         </FormItem>
         <FormItem top="Контактные данные">
           <Textarea value={contacts} onChange={e => setContacts(e.target.value)} />
